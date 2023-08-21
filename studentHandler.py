@@ -2,7 +2,7 @@ import os
 import json
 import logging
 from templateHandler import TemplateHandler
-from common import member_check, hide, DiscordString
+from common import member_check, hide,disable, DiscordString
 from githubWrapper import GitHubWrapper
 from canvasWrapper import CanvasWrapper
 
@@ -33,6 +33,7 @@ class StudentHandler(TemplateHandler):
 
     @hide
     @member_check
+    @disable
     async def message_students(self, message) -> None:
         """
         List students, defaults to both canvas and github
