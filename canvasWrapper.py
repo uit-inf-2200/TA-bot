@@ -16,11 +16,10 @@ class CanvasWrapper:
         message = DiscordString("Canvas students:\n")
         for student in self.course.get_users(enrollment_type="student"):
             student = student.get_profile()
-            name, id = (
-                student["name"],
+            id = (
                 student["login_id"],
             )
-            message += DiscordString(f"{name} : {id}\n")
+            message += DiscordString(f"{id}\n")
             if len(message) > 1900:
                 students.append(message)
                 message = DiscordString("")
