@@ -15,6 +15,11 @@ class DiscordString(str):
     def to_code_inline(self):
         return f"`{self.__str__()}`"
 
+async def do_nothing(*args, **kwargs):
+    return
+
+def disable(func):
+    return do_nothing 
 
 def hide(func):
     def inner(*args, **kwargs):
