@@ -1,6 +1,9 @@
 #!/usr/bin/env python3.10
 
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 import logging
 import discord
 import handlers
@@ -24,12 +27,12 @@ class Bot(discord.Client):
         self.handlers = []
 
     async def handler_setup(self):
-        self.log.info("Setting up handlers..")
-        for handler in handlers.handlers:
-            self.log.debug(f"Handler {handler}...")
-            self.handlers.append(handler)
-            self.log.debug(f"Handler  {handler}... OK")
-        self.log.info("Handlers set up")
+        self.log.debug("Setting up handlers..")
+        self.handlers = handlers.handlers
+        for handler in self.handlers:
+            if handler.__class__.__name__ == "HelperHandler":
+                handler.handlers = self.handlers
+        self.log.debug("Handlers set up")
 
     def log_setup(self):
         log_format = "%(levelname)s %(name)s %(asctime)s - %(message)s"
@@ -55,6 +58,7 @@ class Bot(discord.Client):
             return
         self.log_setup()
         self.log.info("Backend running")
+        self.log.debug("Loading environment variables")
         self.config["role"] = await self.get_role()
         self.log.debug("Role set")
         for channel in self.get_all_channels():
@@ -115,15 +119,13 @@ class Bot(discord.Client):
         if message.author == self.user:
             return
         permissions = Permissions.restricted
-        self.log.debug(
-            f"Message from: {message.author.id}")
+        self.log.debug(f"Message from: {message.author.id}")
         if isinstance(message.channel, discord.TextChannel):
             permissions = await self.get_permissions(message.author)
         elif isinstance(message.channel, discord.DMChannel):
             member = self.get_member(message.author.id)
             if member:
                 permissions = await self.get_permissions(member)
-
         for handler in self.handlers:
             await handler.dispatch(message, permissions)
 
@@ -131,8 +133,8 @@ class Bot(discord.Client):
         if self.broadcast_channel.permissions_for(member).administrator:
             self.log.debug(f"Admin: {member.name}")
             return Permissions.admin
-        elif self.config["member_role_ID"] in [role.id for role in member.roles]:
-            self.log.debug(f"Member: {member.name}")
+        elif self.broadcast_channel.permissions_for(member).manage_roles:
+            self.log.debug(f"TA: {member.name}")
             return Permissions.member
         else:
             self.log.debug(f"Unknown: {member.name}")
@@ -140,14 +142,9 @@ class Bot(discord.Client):
 
 
 if __name__ == "__main__":
-    token = ""
-    token_file = "auth"
-    if not os.path.isfile(token_file):
-        exit("Please create a tokenfile 'auth'")
-    try:
-        with open(token_file) as f:
-            token = f.read()
-    except FileNotFoundError:
-        print("Unable to read authToken")
-
+    load_dotenv()
+    token = os.getenv("DISCORD_TOKEN")
+    if not token:
+        print("Discord token not found")
+        exit(-1)
     Bot(Configuration()).run(token)

@@ -1,7 +1,7 @@
-from templateHandler import TemplateHandler
-from genericMessageHandler import GenericMessageHandler
+from studentHandler import StudentHandler
+from helperHandler import HelperHandler
 
 handlers = [
-    TemplateHandler("Template handler", "Nothing to see here", False),
-    GenericMessageHandler("???", "Not implemented", True)
+    StudentHandler("Student handler", "Nothing to see here", False),
+    HelperHandler([]),
 ]

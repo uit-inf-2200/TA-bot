@@ -9,6 +9,7 @@ __pycache__/
 # config and secrets
 auth
 config.json
+.grading.json
 
 # Distribution / packaging
 .Python
