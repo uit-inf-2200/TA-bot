@@ -225,7 +225,6 @@ class GitHubWrapper:
         date format = "2021-09-30 23:59:59+00:00"
         """
         deadlines = self.organization.get_repo(os.environ["TA_REPO"])
-        # .get_contents("deadlines.json")
         deadlines = deadlines.get_contents(os.environ["DEADLINE_FILE"])
         deadlines = json.loads(deadlines.decoded_content.decode("utf-8"))
         next = Deadline(
