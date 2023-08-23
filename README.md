@@ -1,5 +1,5 @@
-# Discord-bot-template
-Template for creating discord bots in python
+# TA-bot
+Bringing github and canvas closer to discord.
 
 ## Requirements
 ---
@@ -38,8 +38,8 @@ See `requirements.txt` for further dependencies
             - Copy the generated URL into your browser's search field
 
 4. Install dependencies
-    - With python3.10 or later, install dependencies found in 'requirements.txt'
-        - python3.10 -m pip install -r requirements.txt
+    - With python3 or later, install dependencies found in 'requirements.txt'
+        - python3 -m pip install -r requirements.txt
 
 5. Configure the bot
     - In order for the bot to work, it needs to know what server it's suppose to listen/talk to and what members it should listen to
@@ -52,7 +52,7 @@ See `requirements.txt` for further dependencies
 
 ## Running the bot
 ---
-- `python3.10 bot.py`
+- `python3 bot.py`
 - The bot should send a message `I'm online' to your selected broadcast-channel
     - Try reach the template handler by typing the command `!template` in the chat
 
