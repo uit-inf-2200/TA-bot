@@ -64,7 +64,6 @@ class Bot(discord.Client):
         for channel in self.get_all_channels():
             if channel.name == self.config.broadcast_channel:
                 self.broadcast_channel = channel
-                await self.broadcast_channel.send("I'm online!")
 
         if not self.broadcast_channel:
             self.log.error(
