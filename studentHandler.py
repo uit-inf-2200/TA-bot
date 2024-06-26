@@ -28,7 +28,17 @@ class StudentHandler(TemplateHandler):
             return
         assignment = content[1]
         self.log.debug(f"Assignment: {assignment}")
-        await self.reply(message, self.classroom.grading_repos_roll(4, assignment))
+        repos = self.classroom.grading_repos_roll(4, assignment)
+        reply = DiscordString("")
+        for i, group in enumerate(repos,1):
+            reply += DiscordString(f"TA {i}:").to_code_block()
+            for repo in group:
+                r = DiscordString(f"{repo.name} : <{repo.html_url}>\n")
+                if len(reply + r) > 1900:
+                    await self.reply(message, reply)
+                    reply = DiscordString("")
+                reply += r
+        await self.reply(message, reply)
         self.log.debug("Rolled grading")
 
     @hide

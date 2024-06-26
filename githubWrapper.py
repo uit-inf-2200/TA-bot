@@ -51,6 +51,8 @@ class GitHubWrapper:
                 self.assignments_previous = json.load(f)
         except FileNotFoundError:
             self.assignments_previous = {}
+        except json.decoder.JSONDecodeError:
+            self.assignments_previous = {}
 
     def grading_store(self) -> None:
         with open(os.getenv("GRADING_FILE"), "w") as f:
@@ -211,14 +213,8 @@ class GitHubWrapper:
             ta_grading_list[i % number_of_tas].append(repositories.pop())
             for i in range(leftover)
         ]
-        reply = DiscordString("Grading list:\n")
-        for i, ta in enumerate(ta_grading_list):
-            reply += DiscordString(f"TA {i + 1}:").to_code_block()
-            for repo in ta:
-                reply += DiscordString(f"{repo.name} : <{repo.html_url}>\n")
-        self.grading_add(assignment, reply)
 
-        return reply
+        return ta_grading_list
 
     def next_deadline(self) -> Deadline:
         """
